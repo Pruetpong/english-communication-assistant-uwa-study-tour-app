@@ -1,0 +1,2896 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>English Coach — UWA Study Tour 2569</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <!-- Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+    <!-- XSS sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════
+        DESIGN TOKENS
+        ═══════════════════════════════════════════════ */
+        :root {
+            --navy: #003087;
+            --navy-mid: #002470;
+            --navy-light: #1a4a8a;
+            --gold: #DAAA00;
+            --gold-light: #f0c830;
+            --gold-dim: #b08a00;
+            --cream: #f5f0e8;
+            --cream-dark: #ede6d8;
+            --sky: #5aadcf;
+            --sky-light: #7ab8d9;
+            --sky-bright: #b8ddf0;
+            --english-text: #ffffff;
+            --rust: #c05a2b;
+            --sage: #5a8a6a;
+            --white: #ffffff;
+            --text-on-navy: #e8dfc8;
+            --text-muted: #94a3b8;
+            --border: rgba(218, 170, 0, 0.22);
+            --border-light: rgba(218, 170, 0, 0.11);
+            --shadow-sm: 0 2px 8px rgba(0, 48, 135, 0.18);
+            --shadow-md: 0 4px 20px rgba(0, 48, 135, 0.24);
+            --shadow-lg: 0 8px 40px rgba(0, 48, 135, 0.35);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-ui: 'Sarabun', system-ui, sans-serif;
+            --font-thai: 'Sarabun', sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ═══════════════════════════════════════════════
+        RESET & BASE
+        ═══════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        button, [role="button"], .tab-btn, .action-btn, .coach-card, .pron-example-chip, .phrase-card {
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: var(--font-thai);
+            background: var(--navy);
+            color: var(--text-on-navy);
+            min-height: 100vh;
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 0% 0%, rgba(74, 155, 199, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 100% 100%, rgba(201, 162, 39, 0.06) 0%, transparent 60%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(201,162,39,0.03)' stroke-width='1'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ═══════════════════════════════════════════════
+        HEADER
+        ═══════════════════════════════════════════════ */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 35, 66, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+        }
+
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            gap: 12px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .header-flag {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .header-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1.2;
+            letter-spacing: 0.01em;
+        }
+
+        .header-sub {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .header-coach-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(201, 162, 39, 0.12);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--gold-light);
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .header-coach-pill:hover {
+            background: rgba(201, 162, 39, 0.2);
+        }
+
+        .header-coach-pill .pill-avatar {
+            font-size: 15px;
+        }
+
+        #headerCoachName {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ═══════════════════════════════════════════════
+        SETUP MODAL
+        ═══════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(5, 15, 30, 0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--navy-mid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 100%;
+            max-width: 540px;
+            max-height: 100vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .modal-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-on-navy);
+            font-family: var(--font-thai);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a227' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background-color: rgba(201, 162, 39, 0.08);
+        }
+
+        /* Coach Cards */
+        .coach-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .coach-card {
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .coach-card:hover {
+            border-color: var(--border);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .coach-card.selected {
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.1);
+        }
+
+        .coach-card-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+        }
+
+        .coach-card-avatar {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .coach-card-name {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-on-navy);
+            line-height: 1.3;
+        }
+
+        .coach-card-spec {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        /* Mode toggle */
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-family: var(--font-thai);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--border);
+            color: var(--text-on-navy);
+        }
+
+        .mode-btn.selected {
+            border-color: var(--sky);
+            background: rgba(74, 155, 199, 0.12);
+            color: var(--sky-bright);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--navy);
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(201, 162, 39, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+        MAIN LAYOUT
+        ═══════════════════════════════════════════════ */
+        .app-main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 16px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════════════
+        SESSION BAR
+        ═══════════════════════════════════════════════ */
+        .session-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            margin: 14px 0;
+            flex-wrap: wrap;
+        }
+
+        .session-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .session-badge strong {
+            color: var(--text-on-navy);
+            font-weight: 500;
+        }
+
+        .session-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--sage);
+            flex-shrink: 0;
+        }
+
+        .session-bar .spacer {
+            flex: 1;
+        }
+
+        .msg-counter {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .msg-counter.low {
+            color: var(--rust);
+        }
+
+        /* ═══════════════════════════════════════════════
+        TAB NAV
+        ═══════════════════════════════════════════════ */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 5px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 9px 16px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-family: var(--font-thai);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-on-navy);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-btn.active {
+            background: rgba(201, 162, 39, 0.15);
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .tab-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .tab-btn:disabled:hover {
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ═══════════════════════════════════════════════
+        SCENARIO MINI BAR
+        ═══════════════════════════════════════════════ */
+        .scenario-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+
+        .scenario-label {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            flex-shrink: 0;
+        }
+
+        .scenario-select {
+            padding: 5px 28px 5px 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-on-navy);
+            font-family: var(--font-thai);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a227' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .scenario-select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .scenario-bar .spacer {
+            flex: 1;
+        }
+
+        .tts-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .tts-toggle input[type=checkbox] {
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        /* ═══════════════════════════════════════════════
+        CHAT AREA
+        ═══════════════════════════════════════════════ */
+        .chat-window {
+            height: clamp(280px, calc(100svh - 320px), 560px);
+            overflow-y: auto;
+            padding: 16px;
+            background: rgba(5, 15, 30, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--navy-light) transparent;
+        }
+
+        .chat-window::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: var(--navy-light);
+            border-radius: 3px;
+        }
+
+        /* Empty state */
+        .chat-empty {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 24px;
+        }
+
+        .chat-empty-icon {
+            font-size: 42px;
+            opacity: 0.5;
+        }
+
+        .chat-empty-title {
+            font-family: var(--font-display);
+            font-size: 17px;
+            color: var(--text-muted);
+        }
+
+        .chat-empty-text {
+            font-size: 13px;
+            max-width: 280px;
+            line-height: 1.6;
+        }
+
+        /* Message bubbles */
+        .msg {
+            margin-bottom: 16px;
+            animation: msgIn 0.25s ease;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg-user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .msg-assistant {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .msg-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: rgba(201, 162, 39, 0.15);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            align-self: flex-end;
+        }
+
+        .bubble {
+            max-width: 82%;
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            line-height: 1.7;
+            word-wrap: break-word;
+        }
+
+        .bubble-user {
+            background: rgba(201, 162, 39, 0.18);
+            border: 1px solid rgba(201, 162, 39, 0.25);
+            border-bottom-right-radius: 4px;
+            color: var(--cream);
+        }
+
+        .bubble-assistant {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom-left-radius: 4px;
+            color: var(--text-on-navy);
+        }
+
+        /* Formatted response sections */
+        .resp-english {
+            font-family: var(--font-ui);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--english-text);
+            line-height: 1.5;
+            margin-bottom: 2px;
+        }
+
+        .resp-pron {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .resp-divider {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            margin: 10px 0;
+        }
+
+        .resp-thai {
+            font-size: 13.5px;
+            color: var(--text-on-navy);
+            line-height: 1.75;
+        }
+
+        .resp-next-label {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .resp-next-item {
+            display: flex;
+            gap: 7px;
+            font-size: 12px;
+            margin-bottom: 3px;
+            align-items: baseline;
+        }
+
+        .resp-next-en {
+            font-family: var(--font-ui);
+            font-weight: 500;
+            color: var(--sky-bright);
+            flex-shrink: 0;
+        }
+
+        .resp-next-sep {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .resp-next-th {
+            color: var(--text-muted);
+        }
+
+        /* Audio player */
+        .msg-audio {
+            margin-top: 8px;
+        }
+
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(74, 155, 199, 0.1);
+            border: 1px solid rgba(74, 155, 199, 0.2);
+            border-radius: 20px;
+            padding: 5px 12px;
+            width: fit-content;
+        }
+
+        .audio-play-btn {
+            background: none;
+            border: none;
+            color: var(--sky);
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+            line-height: 1;
+        }
+
+        .audio-play-btn:hover {
+            color: var(--sky-light);
+            transform: scale(1.1);
+        }
+
+        .audio-label {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--sky-bright);
+        }
+
+        .audio-download-btn {
+            color: var(--sky);
+            font-size: 14px;
+            text-decoration: none;
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .audio-download-btn:hover {
+            color: var(--sky-light);
+            transform: scale(1.1);
+            display: inline-block;
+        }
+
+        audio {
+            display: none;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .typing-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            animation: typingDot 1.2s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.7);
+                opacity: 0.4;
+            }
+
+            40% {
+                transform: scale(1.0);
+                opacity: 1.0;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+        CHAT INPUT ROW
+        ═══════════════════════════════════════════════ */
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-on-navy);
+            font-family: var(--font-thai);
+            font-size: 14px;
+            resize: none;
+            min-height: 46px;
+            max-height: 120px;
+            transition: var(--transition);
+            line-height: 1.5;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(148, 163, 184, 0.6);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.06);
+        }
+
+        .chat-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--navy);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            height: 46px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            transform: translateY(-1px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Action row */
+        .action-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-on-navy);
+            border-color: var(--border);
+        }
+
+        .action-btn.danger:hover {
+            background: rgba(192, 90, 43, 0.15);
+            color: var(--rust);
+            border-color: rgba(192, 90, 43, 0.3);
+        }
+
+        .action-btn.save-btn:hover {
+            background: rgba(90, 138, 106, 0.15);
+            color: var(--sage);
+            border-color: rgba(90, 138, 106, 0.3);
+        }
+
+        .action-row .spacer {
+            flex: 1;
+        }
+
+        /* ═══════════════════════════════════════════════
+        PHRASE CARDS (in chat tab)
+        ═══════════════════════════════════════════════ */
+        .phrases-section {
+            margin-top: 18px;
+        }
+
+        .phrases-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .phrases-title {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+        }
+
+        .phrases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+        }
+
+        .phrase-card {
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .phrase-card:hover {
+            background: rgba(74, 155, 199, 0.1);
+            border-color: rgba(74, 155, 199, 0.3);
+        }
+
+        .phrase-card-en {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--english-text);
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .phrase-card-th {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .phrase-card-ctx {
+            display: inline-block;
+            margin-top: 4px;
+            font-family: var(--font-ui);
+            font-size: 10px;
+            color: rgba(201, 162, 39, 0.6);
+            background: rgba(201, 162, 39, 0.08);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        /* ═══════════════════════════════════════════════
+        UNDERSTAND TAB — special format display
+        ═══════════════════════════════════════════════ */
+        .understand-input-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .understand-input-hint code {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            background: rgba(74, 155, 199, 0.12);
+            padding: 1px 5px;
+            border-radius: 3px;
+            color: var(--sky-bright);
+        }
+
+        /* ═══════════════════════════════════════════════
+        PRONUNCIATION TAB
+        ═══════════════════════════════════════════════ */
+        .pron-hint {
+            background: rgba(201, 162, 39, 0.07);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        .pron-hint p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .pron-hint strong {
+            color: var(--gold-light);
+        }
+
+        .pron-examples {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .pron-example-chip {
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-on-navy);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pron-example-chip:hover {
+            border-color: var(--sky);
+            color: var(--sky-bright);
+            background: rgba(74, 155, 199, 0.1);
+        }
+
+        /* ═══════════════════════════════════════════════
+        SLANG GUIDE TAB
+        ═══════════════════════════════════════════════ */
+        .slang-header {
+            margin-bottom: 18px;
+        }
+
+        .slang-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .slang-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .slang-search-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .slang-search {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-on-navy);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .slang-search::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .slang-search:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .cat-filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cat-btn.active {
+            background: rgba(201, 162, 39, 0.15);
+            color: var(--gold-light);
+            border-color: var(--border);
+        }
+
+        .cat-btn:hover {
+            color: var(--text-on-navy);
+            border-color: var(--border);
+        }
+
+        .slang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 10px;
+        }
+
+        .slang-card {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .slang-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--border);
+        }
+
+        .slang-term {
+            font-family: var(--font-display);
+            font-size: 17px;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .slang-meaning {
+            font-size: 13.5px;
+            color: var(--text-on-navy);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .slang-example {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.5;
+            border-left: 2px solid var(--border);
+            padding-left: 8px;
+        }
+
+        .slang-cat-tag {
+            display: inline-block;
+            margin-top: 7px;
+            font-family: var(--font-ui);
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        .tag-general {
+            background: rgba(74, 155, 199, 0.12);
+            color: var(--sky-bright);
+        }
+
+        .tag-academic {
+            background: rgba(201, 162, 39, 0.12);
+            color: var(--gold-light);
+        }
+
+        .tag-polite {
+            background: rgba(90, 138, 106, 0.15);
+            color: var(--sage);
+        }
+
+        .tag-emergency {
+            background: rgba(192, 90, 43, 0.15);
+            color: var(--rust);
+        }
+
+        .slang-no-result {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ═══════════════════════════════════════════════
+        TOAST NOTIFICATION
+        ═══════════════════════════════════════════════ */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 11px 18px;
+            background: var(--navy-mid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--text-on-navy);
+            animation: toastIn 0.3s ease;
+            pointer-events: all;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            border-color: rgba(90, 138, 106, 0.4);
+        }
+
+        .toast.error {
+            border-color: rgba(192, 90, 43, 0.4);
+            color: #f4a07a;
+        }
+
+        .toast.info {
+            border-color: rgba(74, 155, 199, 0.4);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+        SETUP WELCOME (before session init)
+        ═══════════════════════════════════════════════ */
+        .welcome-panel {
+            text-align: center;
+            padding: 48px 20px 32px;
+        }
+
+        .welcome-flag {
+            font-size: 52px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .welcome-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .welcome-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 340px;
+            margin: 0 auto 24px;
+            line-height: 1.7;
+        }
+
+        .welcome-start-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+            border: none;
+            border-radius: var(--radius-lg);
+            color: var(--navy);
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(201, 162, 39, 0.2);
+        }
+
+        .welcome-start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(201, 162, 39, 0.35);
+        }
+
+        /* Feature pills */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 28px;
+        }
+
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════════════
+        RESPONSIVE
+        ═══════════════════════════════════════════════ */
+
+        /* ── Tablet (768px) ──────────────────────────── */
+        @media (max-width: 768px) {
+            .slang-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .phrases-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ── Phone (600px) ───────────────────────────── */
+        @media (max-width: 600px) {
+            .header-inner {
+                height: 54px;
+                padding-top: var(--safe-top);
+                padding-left: max(16px, var(--safe-left));
+                padding-right: max(16px, var(--safe-right));
+            }
+
+            .header-title {
+                font-size: 13px;
+            }
+
+            .coach-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .modal-box {
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                max-height: calc(95vh - var(--safe-top));
+                width: 100%;
+                padding: 22px 18px;
+                padding-bottom: calc(20px + var(--safe-bottom));
+            }
+
+            .chat-window {
+                height: calc(100svh - 360px);
+                min-height: 220px;
+            }
+
+            .slang-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .phrases-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                padding: 10px 14px;
+                font-size: 12px;
+                min-height: 44px;
+            }
+
+            .welcome-title {
+                font-size: 22px;
+            }
+
+            .chat-input {
+                font-size: 16px;
+                min-height: 48px;
+            }
+
+            .send-btn {
+                height: 48px;
+                min-width: 60px;
+            }
+
+            .input-row {
+                padding-bottom: var(--safe-bottom);
+            }
+
+            .toast-container {
+                bottom: calc(24px + var(--safe-bottom));
+                right: max(20px, var(--safe-right));
+            }
+
+            .cat-filters {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+                padding-bottom: 2px;
+            }
+
+            .cat-filters::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        /* ── Small phone (480px) ─────────────────────── */
+        @media (max-width: 480px) {
+            .header-inner {
+                height: 50px;
+            }
+
+            .header-title {
+                font-size: 12px;
+            }
+
+            .header-sub {
+                display: none;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+
+            .coach-card {
+                padding: 10px;
+            }
+
+            .session-bar {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .cat-btn {
+                min-height: 36px;
+                font-size: 12px;
+                padding: 8px 14px;
+            }
+        }
+
+        /* ── Landscape phone ─────────────────────────── */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header-inner {
+                height: 44px;
+            }
+
+            .header-sub {
+                display: none;
+            }
+
+            .tab-btn {
+                padding: 7px 14px;
+                min-height: 36px;
+            }
+
+            .chat-window {
+                height: calc(100svh - 200px);
+                min-height: 140px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+        SCROLLBAR (global)
+        ═══════════════════════════════════════════════ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--navy-light);
+            border-radius: 3px;
+        }
+
+        select option {
+            background: var(--navy-mid);
+            color: var(--text-on-navy);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(201, 162, 39, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Markdown-like rendering helpers */
+        .bubble-assistant strong {
+            color: var(--gold-light);
+        }
+
+        .bubble-assistant em {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ═══════════════════════════════════════════════
+           MARKDOWN ELEMENT STYLES
+           Scoped to assistant response sections only.
+        ═══════════════════════════════════════════════ */
+
+        /* ── Paragraph spacing ───────────────────────── */
+        .resp-english p,
+        .resp-thai p {
+            margin: 0 0 0.5em 0;
+        }
+        .resp-english p:last-child,
+        .resp-thai p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── Bold / Italic / Strikethrough ───────────── */
+        .resp-english strong,
+        .resp-thai strong {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+        .resp-english em,
+        .resp-thai em {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .resp-english s,
+        .resp-thai s {
+            text-decoration: line-through;
+            opacity: 0.65;
+        }
+
+        /* ── Headings (proportional, not oversized) ──── */
+        .resp-english h1, .resp-thai h1 { font-size: 1.15em; font-weight: 700; margin: 0.5em 0 0.3em; color: var(--gold); }
+        .resp-english h2, .resp-thai h2 { font-size: 1.08em; font-weight: 700; margin: 0.5em 0 0.3em; color: var(--gold); }
+        .resp-english h3, .resp-thai h3 { font-size: 1.0em;  font-weight: 600; margin: 0.4em 0 0.25em; color: var(--sky-bright); }
+        .resp-english h4, .resp-thai h4,
+        .resp-english h5, .resp-thai h5,
+        .resp-english h6, .resp-thai h6 { font-size: 0.95em; font-weight: 600; margin: 0.4em 0 0.25em; color: var(--sky-bright); }
+
+        /* ── Lists ───────────────────────────────────── */
+        .resp-english ul,
+        .resp-thai ul,
+        .resp-english ol,
+        .resp-thai ol {
+            margin: 0.35em 0 0.35em 1.4em;
+            padding: 0;
+        }
+        .resp-english li,
+        .resp-thai li {
+            margin-bottom: 0.2em;
+            line-height: 1.6;
+        }
+        .resp-english ul li { list-style-type: disc; }
+        .resp-thai ul li    { list-style-type: disc; }
+        .resp-english ol li { list-style-type: decimal; }
+        .resp-thai ol li    { list-style-type: decimal; }
+        .resp-english li ul, .resp-thai li ul,
+        .resp-english li ol, .resp-thai li ol {
+            margin-top: 0.2em;
+            margin-bottom: 0;
+        }
+
+        /* ── Inline code ─────────────────────────────── */
+        .resp-english code:not(pre code),
+        .resp-thai code:not(pre code) {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 3px;
+            padding: 0.1em 0.35em;
+            color: var(--cream);
+            white-space: nowrap;
+        }
+
+        /* ── Code blocks (highlight.js) ──────────────── */
+        .resp-english .hljs-block,
+        .resp-thai .hljs-block {
+            margin: 0.5em 0;
+            border-radius: var(--radius-sm, 6px);
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.75em 1em;
+            font-size: 0.82em;
+            line-height: 1.55;
+        }
+        .resp-english .hljs-block code,
+        .resp-thai .hljs-block code {
+            font-family: var(--font-mono);
+            background: transparent;
+            border: none;
+            padding: 0;
+            white-space: pre;
+            color: inherit;
+        }
+
+        /* ── Blockquote ──────────────────────────────── */
+        .resp-english blockquote,
+        .resp-thai blockquote {
+            border-left: 3px solid var(--gold-dim, #8a6e1a);
+            margin: 0.4em 0;
+            padding: 0.3em 0 0.3em 0.85em;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .resp-english blockquote p,
+        .resp-thai blockquote p {
+            margin: 0;
+        }
+
+        /* ── Links ───────────────────────────────────── */
+        .resp-english a,
+        .resp-thai a {
+            color: var(--sky-bright);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.15s;
+        }
+        .resp-english a:hover,
+        .resp-thai a:hover {
+            color: var(--gold-light);
+        }
+
+        /* ── Tables ──────────────────────────────────── */
+        .resp-english table,
+        .resp-thai table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.88em;
+            margin: 0.5em 0;
+            overflow-x: auto;
+            display: block;
+        }
+        .resp-english th,
+        .resp-thai th {
+            background: rgba(201, 162, 39, 0.12);
+            color: var(--gold-light);
+            font-weight: 600;
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .resp-english td,
+        .resp-thai td {
+            padding: 4px 10px;
+            border: 1px solid var(--border-light);
+            color: var(--text-on-navy);
+            vertical-align: top;
+        }
+        .resp-english tr:nth-child(even) td,
+        .resp-thai tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ── Horizontal rule inside markdown sections ── */
+        .resp-english hr,
+        .resp-thai hr {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════
+    HEADER
+    ═══════════════════════════════════════════════ -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="header-brand">
+                <span class="header-flag">🇦🇺</span>
+                <div class="header-titles">
+                    <span class="header-title">English Coach — UWA</span>
+                    <span class="header-sub">Silpakorn · Study Tour 2569</span>
+                </div>
+            </div>
+            <div class="header-coach-pill" id="headerCoachPill" onclick="openSetup()">
+                <span class="pill-avatar" id="headerCoachAvatar">⚙️</span>
+                <span id="headerCoachName">ตั้งค่า Coach</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════
+    SETUP MODAL
+    ═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="setupModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-icon">🇦🇺</span>
+                <div class="modal-title">ตั้งค่า English Coach</div>
+                <div class="modal-subtitle">The University of Western Australia · Perth</div>
+            </div>
+
+            <!-- Coach selection -->
+            <div class="form-group">
+                <label class="form-label">เลือก Coach ของคุณ</label>
+                <div class="coach-grid" id="coachGrid">
+                    <!-- filled by JS -->
+                </div>
+            </div>
+
+            <!-- Scenario -->
+            <div class="form-group">
+                <label class="form-label">สถานการณ์เริ่มต้น</label>
+                <select class="form-select" id="setupScenario">
+                    <option value="uwa_campus">🏛️ UWA Campus</option>
+                    <option value="academic">📚 Academic & Seminars</option>
+                    <option value="airport">✈️ Perth Airport</option>
+                    <option value="accommodation">🏨 Accommodation</option>
+                    <option value="dining">🍽️ Australian Dining</option>
+                    <option value="tourism">🦘 Perth Tourism</option>
+                    <option value="shopping">🛍️ Shopping</option>
+                    <option value="transport">🚌 Transportation</option>
+                    <option value="emergency">🚨 Emergency</option>
+                    <option value="social">🤝 Social & Networking</option>
+                </select>
+            </div>
+
+            <!-- User mode -->
+            <div class="form-group">
+                <label class="form-label">โหมดการใช้งาน</label>
+                <div class="mode-toggle">
+                    <button class="mode-btn selected" data-mode="educator" onclick="selectMode(this)">
+                        👩‍🏫 นักการศึกษา
+                    </button>
+                    <button class="mode-btn" data-mode="traveler" onclick="selectMode(this)">
+                        🧳 นักท่องเที่ยว
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="startBtn" onclick="initSession()">
+                ✨ เริ่มใช้งาน English Coach
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+    MAIN CONTENT
+    ═══════════════════════════════════════════════ -->
+    <main class="app-main">
+
+        <!-- Welcome screen (pre-session) -->
+        <div id="welcomePanel" class="welcome-panel">
+            <span class="welcome-flag">🎓</span>
+            <h1 class="welcome-title">English Communication<br>Assistant</h1>
+            <p class="welcome-sub">
+                ผู้ช่วยสื่อสารภาษาอังกฤษสำหรับโครงการพัฒนาภาษา<br>
+                คณะศึกษาศาสตร์ มหาวิทยาลัยศิลปากร<br>
+                ณ University of Western Australia, Perth<br>
+                29 มีนาคม – 5 เมษายน 2569
+            </p>
+            <button class="welcome-start-btn" onclick="openSetup()">
+                ⚙️ ตั้งค่าและเริ่มใช้งาน
+            </button>
+            <div class="feature-pills">
+                <span class="feature-pill">💬 ใช้งาน Coach</span>
+                <span class="feature-pill">🔄 เข้าใจเจ้าของภาษา</span>
+                <span class="feature-pill">🤝 ปรึกษาวัฒนธรรม</span>
+                <span class="feature-pill">🎙️ ฝึกสำเนียง</span>
+                <span class="feature-pill">📖 คู่มือ Slang</span>
+            </div>
+        </div>
+
+        <!-- Main app (post-session) -->
+        <div id="appPanel" style="display:none">
+
+            <!-- Session info bar -->
+            <div class="session-bar">
+                <span class="dot"
+                    style="width:7px;height:7px;border-radius:50%;background:var(--sage);flex-shrink:0"></span>
+                <span class="session-badge">Coach: <strong id="sbCoach">—</strong></span>
+                <span class="session-badge" style="margin-left:4px">สถานการณ์: <strong id="sbScenario">—</strong></span>
+                <span class="spacer"></span>
+                <span class="msg-counter" id="msgCounter">20 ข้อความ</span>
+            </div>
+
+            <!-- Tab navigation -->
+            <nav class="tab-nav" style="margin-bottom:14px">
+                <button class="tab-btn active" data-tab="chat" onclick="switchTab('chat')">💬 ใช้งาน Coach</button>
+                <button class="tab-btn" data-tab="understand" onclick="switchTab('understand')">🔄
+                    เข้าใจเจ้าของภาษา</button>
+                <button class="tab-btn" data-tab="consult" onclick="switchTab('consult')">🤝 ปรึกษา Coach</button>
+                <button class="tab-btn" data-tab="pronunciation" onclick="switchTab('pronunciation')">🎙️
+                    ฝึกสำเนียง</button>
+                <button class="tab-btn" data-tab="slang" onclick="switchTab('slang')">📖 Slang Guide</button>
+            </nav>
+
+            <!-- ─── TAB: CHAT ─────────────────────────────── -->
+            <div class="tab-panel active" id="tab-chat">
+                <div class="scenario-bar">
+                    <span class="scenario-label">Scenario</span>
+                    <select class="scenario-select" id="chatScenario" onchange="changeScenario('chat')">
+                        <option value="uwa_campus">🏛️ UWA Campus</option>
+                        <option value="academic">📚 Academic</option>
+                        <option value="airport">✈️ Airport</option>
+                        <option value="accommodation">🏨 Accommodation</option>
+                        <option value="dining">🍽️ Dining</option>
+                        <option value="tourism">🦘 Tourism</option>
+                        <option value="shopping">🛍️ Shopping</option>
+                        <option value="transport">🚌 Transport</option>
+                        <option value="emergency">🚨 Emergency</option>
+                        <option value="social">🤝 Social</option>
+                    </select>
+                    <span class="spacer"></span>
+                    <label class="tts-toggle">
+                        <input type="checkbox" id="ttsToggle" onchange="toggleTts()" />
+                        🔊 เสียงภาษาอังกฤษ
+                    </label>
+                </div>
+
+                <div class="chat-window" id="chatWindow">
+                    <div class="chat-empty" id="chatEmpty">
+                        <span class="chat-empty-icon" id="chatEmptyAvatar">👩‍🎓</span>
+                        <div class="chat-empty-title">พร้อมช่วยเหลือแล้ว</div>
+                        <p class="chat-empty-text">พิมพ์สิ่งที่ต้องการพูดเป็นภาษาไทย
+                            หรือถามคำถามเกี่ยวกับการสื่อสารภาษาอังกฤษ</p>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top:10px">
+                    <textarea class="chat-input" id="chatInput" placeholder="พิมพ์ภาษาไทยที่อยากพูด หรือถามอะไรก็ได้..."
+                        rows="1" onkeydown="handleKey(event,'chat')" oninput="autoResize(this)"></textarea>
+                    <button class="send-btn" id="chatSendBtn" onclick="sendMessage('chat')">ส่ง ↵</button>
+                </div>
+                <div class="action-row">
+                    <button class="action-btn" onclick="retryLast('chat')">🔄 ลองใหม่</button>
+                    <button class="action-btn" onclick="undoLast('chat')">↩ ย้อนกลับ</button>
+                    <span class="spacer"></span>
+                    <button class="action-btn save-btn" onclick="saveConversation('chat')">💾 บันทึก</button>
+                    <button class="action-btn danger" onclick="clearChat('chat')">🗑️ ล้าง</button>
+                </div>
+
+                <!-- Quick Phrase Cards -->
+                <div class="phrases-section">
+                    <div class="phrases-header">
+                        <span class="phrases-title">⚡ Quick Phrases — <span id="phraseScenarioLabel">UWA
+                                Campus</span></span>
+                    </div>
+                    <div class="phrases-grid" id="phraseGrid">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── TAB: UNDERSTAND ──────────────────────── -->
+            <div class="tab-panel" id="tab-understand">
+                <div class="scenario-bar">
+                    <span class="scenario-label">Scenario</span>
+                    <select class="scenario-select" id="understandScenario" onchange="changeScenario('understand')">
+                        <option value="uwa_campus">🏛️ UWA Campus</option>
+                        <option value="academic">📚 Academic</option>
+                        <option value="airport">✈️ Airport</option>
+                        <option value="accommodation">🏨 Accommodation</option>
+                        <option value="dining">🍽️ Dining</option>
+                        <option value="tourism">🦘 Tourism</option>
+                        <option value="shopping">🛍️ Shopping</option>
+                        <option value="transport">🚌 Transport</option>
+                        <option value="emergency">🚨 Emergency</option>
+                        <option value="social">🤝 Social</option>
+                    </select>
+                </div>
+
+                <div class="understand-input-hint">
+                    ป้อนข้อความภาษาอังกฤษที่ได้ยินหรืออ่าน เช่น
+                    <code>"No worries, she'll be right!"</code> หรือ
+                    <code>"That's brilliant, cheers!"</code>
+                    เพื่อรับคำแปลและคำแนะนำการตอบกลับ
+                </div>
+
+                <div class="chat-window" id="understandWindow">
+                    <div class="chat-empty" id="understandEmpty">
+                        <span class="chat-empty-icon">🔄</span>
+                        <div class="chat-empty-title">วางข้อความภาษาอังกฤษที่ไม่เข้าใจ</div>
+                        <p class="chat-empty-text">Coach จะแปล อธิบาย slang/idiom และแนะนำ 3 วิธีตอบกลับ</p>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top:10px">
+                    <textarea class="chat-input" id="understandInput"
+                        placeholder="วางประโยคภาษาอังกฤษที่ได้ยิน เช่น: 'Fair enough, let's circle back later.'"
+                        rows="1" onkeydown="handleKey(event,'understand')" oninput="autoResize(this)"></textarea>
+                    <button class="send-btn" id="understandSendBtn" onclick="sendMessage('understand')">แปล ↵</button>
+                </div>
+                <div class="action-row">
+                    <button class="action-btn" onclick="retryLast('understand')">🔄 ลองใหม่</button>
+                    <button class="action-btn" onclick="undoLast('understand')">↩ ย้อนกลับ</button>
+                    <span class="spacer"></span>
+                    <button class="action-btn save-btn" onclick="saveConversation('understand')">💾 บันทึก</button>
+                    <button class="action-btn danger" onclick="clearChat('understand')">🗑️ ล้าง</button>
+                </div>
+            </div>
+
+            <!-- ─── TAB: CONSULT ─────────────────────────── -->
+            <div class="tab-panel" id="tab-consult">
+                <div class="scenario-bar">
+                    <span class="scenario-label">Scenario</span>
+                    <select class="scenario-select" id="consultScenario" onchange="changeScenario('consult')">
+                        <option value="uwa_campus">🏛️ UWA Campus</option>
+                        <option value="academic">📚 Academic</option>
+                        <option value="airport">✈️ Airport</option>
+                        <option value="accommodation">🏨 Accommodation</option>
+                        <option value="dining">🍽️ Dining</option>
+                        <option value="tourism">🦘 Tourism</option>
+                        <option value="shopping">🛍️ Shopping</option>
+                        <option value="transport">🚌 Transport</option>
+                        <option value="emergency">🚨 Emergency</option>
+                        <option value="social">🤝 Social</option>
+                    </select>
+                </div>
+
+                <div class="chat-window" id="consultWindow">
+                    <div class="chat-empty" id="consultEmpty">
+                        <span class="chat-empty-icon">🤝</span>
+                        <div class="chat-empty-title">ปรึกษาเรื่องวัฒนธรรมและการสื่อสาร</div>
+                        <p class="chat-empty-text">ถามเกี่ยวกับมารยาท วัฒนธรรมออสเตรเลีย กลยุทธ์การสื่อสาร
+                            หรือการสร้างความสัมพันธ์กับนักการศึกษา UWA</p>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top:10px">
+                    <textarea class="chat-input" id="consultInput"
+                        placeholder="เช่น: ควรทำอย่างไรเมื่อพบอาจารย์ UWA ครั้งแรก?" rows="1"
+                        onkeydown="handleKey(event,'consult')" oninput="autoResize(this)"></textarea>
+                    <button class="send-btn" id="consultSendBtn" onclick="sendMessage('consult')">ถาม ↵</button>
+                </div>
+                <div class="action-row">
+                    <button class="action-btn" onclick="retryLast('consult')">🔄 ลองใหม่</button>
+                    <button class="action-btn" onclick="undoLast('consult')">↩ ย้อนกลับ</button>
+                    <span class="spacer"></span>
+                    <button class="action-btn save-btn" onclick="saveConversation('consult')">💾 บันทึก</button>
+                    <button class="action-btn danger" onclick="clearChat('consult')">🗑️ ล้าง</button>
+                </div>
+            </div>
+
+            <!-- ─── TAB: PRONUNCIATION ───────────────────── -->
+            <div class="tab-panel" id="tab-pronunciation">
+                <div class="pron-hint">
+                    <p>
+                        พิมพ์ประโยคภาษาอังกฤษที่ <strong>ต้องการพูด</strong> แล้ว Coach จะวิเคราะห์:
+                        ความเป็นธรรมชาติ · Stress & Rhythm · ทางเลือกที่ดีกว่า · จุดระวังสำหรับคนไทย
+                    </p>
+                    <div class="pron-examples">
+                        <span class="pron-example-chip" onclick="fillPron('Could you please repeat that?')">Could you
+                            please repeat that?</span>
+                        <span class="pron-example-chip" onclick="fillPron('I am very happy to be here today.')">I am
+                            very happy to be here today.</span>
+                        <span class="pron-example-chip" onclick="fillPron('Thank you for your kind hospitality.')">Thank
+                            you for your kind hospitality.</span>
+                        <span class="pron-example-chip" onclick="fillPron('I would like to ask a question.')">I would
+                            like to ask a question.</span>
+                        <span class="pron-example-chip" onclick="fillPron('Nice to meet you, Professor.')">Nice to meet
+                            you, Professor.</span>
+                    </div>
+                </div>
+
+                <div class="chat-window" id="pronunciationWindow">
+                    <div class="chat-empty" id="pronunciationEmpty">
+                        <span class="chat-empty-icon">🎙️</span>
+                        <div class="chat-empty-title">วิเคราะห์การออกเสียง</div>
+                        <p class="chat-empty-text">พิมพ์ประโยคภาษาอังกฤษที่ต้องการพูด หรือคลิกตัวอย่างด้านบน</p>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top:10px">
+                    <textarea class="chat-input" id="pronunciationInput"
+                        placeholder="พิมพ์ประโยคภาษาอังกฤษที่ต้องการวิเคราะห์..." rows="1"
+                        onkeydown="handleKey(event,'pronunciation')" oninput="autoResize(this)"></textarea>
+                    <button class="send-btn" id="pronunciationSendBtn" onclick="sendMessage('pronunciation')">วิเคราะห์
+                        ↵</button>
+                </div>
+                <div class="action-row">
+                    <button class="action-btn save-btn" onclick="saveConversation('pronunciation')">💾 บันทึก</button>
+                    <button class="action-btn danger" onclick="clearChat('pronunciation')">🗑️ ล้าง</button>
+                </div>
+            </div>
+
+            <!-- ─── TAB: SLANG GUIDE ─────────────────────── -->
+            <div class="tab-panel" id="tab-slang">
+                <div class="slang-header">
+                    <div class="slang-title">🇦🇺 Australian English Guide</div>
+                    <div class="slang-sub">Slang · Academic Phrases · Polite Expressions · Emergency English</div>
+                </div>
+                <div class="slang-search-row">
+                    <input class="slang-search" type="text" id="slangSearch" placeholder="ค้นหา slang หรือคำแปล..."
+                        oninput="filterSlang()" />
+                    <div class="cat-filters">
+                        <button class="cat-btn active" data-cat="all" onclick="setCat(this,'all')">ทั้งหมด</button>
+                        <button class="cat-btn" data-cat="general" onclick="setCat(this,'general')">ทั่วไป</button>
+                        <button class="cat-btn" data-cat="academic" onclick="setCat(this,'academic')">วิชาการ</button>
+                        <button class="cat-btn" data-cat="polite" onclick="setCat(this,'polite')">สุภาพ</button>
+                        <button class="cat-btn" data-cat="emergency" onclick="setCat(this,'emergency')">ฉุกเฉิน</button>
+                    </div>
+                </div>
+                <div class="slang-grid" id="slangGrid">
+                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">
+                        <span class="spinner"></span> กำลังโหลด...
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /appPanel -->
+    </main>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ═══════════════════════════════════════════════
+    JAVASCRIPT
+    ═══════════════════════════════════════════════ -->
+    <script>
+        'use strict';
+
+        // ─────────────────────────────────────────────────
+        // MARKDOWN CONFIGURATION
+        // ─────────────────────────────────────────────────
+        const _hlRenderer = new marked.Renderer();
+        _hlRenderer.code = function(code, language) {
+            const lang = (language && hljs.getLanguage(language)) ? language : '';
+            const highlighted = lang
+                ? hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+                : hljs.highlightAuto(code).value;
+            return `<pre class="hljs-block"><code class="hljs language-${escHtml(lang || 'plaintext')}">${highlighted}</code></pre>`;
+        };
+        marked.use({
+            renderer: _hlRenderer,
+            gfm: true,
+            breaks: true,
+            pedantic: false,
+            mangle: false,
+            headerIds: false,
+        });
+        const _PURIFY_CONFIG = {
+            ALLOWED_TAGS: [
+                'p', 'br', 'b', 'strong', 'i', 'em', 's', 'del',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                'ul', 'ol', 'li', 'blockquote',
+                'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+                'a', 'hr', 'span',
+            ],
+            ALLOWED_ATTR: ['href', 'class', 'target', 'rel'],
+        };
+        DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+            if (node.tagName === 'A') {
+                node.setAttribute('target', '_blank');
+                node.setAttribute('rel', 'noopener noreferrer');
+            }
+        });
+        function renderMarkdown(text) {
+            if (!text) return '';
+            return DOMPurify.sanitize(marked.parse(text), _PURIFY_CONFIG);
+        }
+
+        // ─────────────────────────────────────────────────
+        // STATE
+        // ─────────────────────────────────────────────────
+        const MAX_HISTORY = 20;
+
+        const state = {
+            sessionId: null,
+            initialized: false,
+            coachName: 'Dr. Emma Clarke',
+            coachAvatar: '👩‍🎓',
+            scenario: 'uwa_campus',
+            userMode: 'educator',
+            ttsEnabled: false,
+            currentTab: 'chat',
+            // per-tab history for display (server holds authoritative copy)
+            history: {
+                chat: [],
+                understand: [],
+                consult: [],
+                pronunciation: [],
+            },
+            slangData: null,
+            slangCat: 'all',
+            sending: { chat: false, understand: false, consult: false, pronunciation: false },
+        };
+
+        // Scenario display names
+        const SCENARIO_NAMES = {
+            airport: '✈️ Perth Airport',
+            accommodation: '🏨 Accommodation',
+            uwa_campus: '🏛️ UWA Campus',
+            academic: '📚 Academic',
+            dining: '🍽️ Dining',
+            tourism: '🦘 Tourism',
+            shopping: '🛍️ Shopping',
+            transport: '🚌 Transport',
+            emergency: '🚨 Emergency',
+            social: '🤝 Social',
+        };
+
+        // Tab → endpoint mapping
+        const TAB_ENDPOINT = {
+            chat: '/api/chat',
+            understand: '/api/understand',
+            consult: '/api/consult',
+            pronunciation: '/api/pronunciation',
+        };
+
+        // ─────────────────────────────────────────────────
+        // COACH CARD DATA (mirrors app.py COACHES keys)
+        // Must be defined before init() IIFE runs
+        // ─────────────────────────────────────────────────
+        const COACHES_META = [
+            { name: 'Dr. Emma Clarke', avatar: '👩‍🎓', spec: 'Academic & Professional' },
+            { name: 'James Wilson', avatar: '👨‍💼', spec: 'Daily Life & Services' },
+            { name: 'Sarah Thompson', avatar: '👩‍🏫', spec: 'Social & Cultural' },
+            { name: 'Michael Chen', avatar: '🧭', spec: 'Tourism & Exploration' },
+            { name: 'Dr. Olivia Hart', avatar: '🏥', spec: 'Emergency' },
+            { name: 'Alex Patterson', avatar: '🚌', spec: 'Transport & Navigation' },
+        ];
+
+        // ─────────────────────────────────────────────────
+        // INIT
+        // ─────────────────────────────────────────────────
+        (function init() {
+            state.sessionId = crypto.randomUUID
+                ? crypto.randomUUID()
+                : 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+            buildCoachGrid();
+            loadSlangData();
+            openSetup();
+        })();
+
+        // ─────────────────────────────────────────────────
+        // SETUP MODAL
+        // ─────────────────────────────────────────────────
+        function openSetup() {
+            document.getElementById('setupModal').classList.add('active');
+        }
+        function closeSetup() {
+            document.getElementById('setupModal').classList.remove('active');
+        }
+
+        function buildCoachGrid() {
+            const grid = document.getElementById('coachGrid');
+            grid.innerHTML = COACHES_META.map(c => `
+    <div class="coach-card ${c.name === state.coachName ? 'selected' : ''}"
+         data-coach="${c.name}" onclick="selectCoach(this,'${c.name}','${c.avatar}')">
+      <div class="coach-card-inner">
+        <span class="coach-card-avatar">${c.avatar}</span>
+        <div>
+          <div class="coach-card-name">${c.name}</div>
+          <div class="coach-card-spec">${c.spec}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        function selectCoach(el, name, avatar) {
+            document.querySelectorAll('.coach-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            state.coachName = name;
+            state.coachAvatar = avatar;
+        }
+
+        function selectMode(btn) {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            state.userMode = btn.dataset.mode;
+        }
+
+        async function initSession() {
+            const btn = document.getElementById('startBtn');
+            state.scenario = document.getElementById('setupScenario').value;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> กำลังเริ่ม...';
+
+            try {
+                const res = await fetch('/api/session/init', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: state.sessionId,
+                        coach_name: state.coachName,
+                        scenario: state.scenario,
+                        user_mode: state.userMode,
+                    }),
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                state.coachAvatar = data.coach.avatar;
+                state.coachName = data.coach.name;
+                state.initialized = true;
+
+                // Update header pill
+                document.getElementById('headerCoachAvatar').textContent = state.coachAvatar;
+                document.getElementById('headerCoachName').textContent = state.coachName;
+
+                // Update session bar
+                document.getElementById('sbCoach').textContent = `${state.coachAvatar} ${state.coachName}`;
+                document.getElementById('sbScenario').textContent = SCENARIO_NAMES[state.scenario] || state.scenario;
+
+                // Sync scenario selects
+                syncAllScenarioSelects(state.scenario);
+
+                // Update chat empty avatar
+                document.getElementById('chatEmptyAvatar').textContent = state.coachAvatar;
+
+                // Load phrases
+                loadPhrases(state.scenario);
+
+                // Show app
+                document.getElementById('welcomePanel').style.display = 'none';
+                document.getElementById('appPanel').style.display = 'block';
+                closeSetup();
+                toast('✅ Coach พร้อมใช้งานแล้ว!', 'success');
+            } catch (err) {
+                toast('❌ เกิดข้อผิดพลาด: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '✨ เริ่มใช้งาน English Coach';
+            }
+        }
+
+        function syncAllScenarioSelects(val) {
+            ['chatScenario', 'understandScenario', 'consultScenario'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = val;
+            });
+        }
+
+        // ─────────────────────────────────────────────────
+        // TAB SWITCHING
+        // ─────────────────────────────────────────────────
+        function switchTab(tab) {
+            state.currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+        }
+
+        // ─────────────────────────────────────────────────
+        // SCENARIO CHANGE
+        // ─────────────────────────────────────────────────
+        async function changeScenario(tab) {
+            const sel = document.getElementById(
+                tab === 'chat' ? 'chatScenario' : (tab + 'Scenario')
+            );
+            state.scenario = sel.value;
+
+            // Sync other selects
+            syncAllScenarioSelects(state.scenario);
+            document.getElementById('sbScenario').textContent = SCENARIO_NAMES[state.scenario] || state.scenario;
+
+            // Re-init session with new scenario
+            try {
+                await fetch('/api/session/init', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: state.sessionId,
+                        coach_name: state.coachName,
+                        scenario: state.scenario,
+                        user_mode: state.userMode,
+                    }),
+                });
+                if (tab === 'chat') {
+                    loadPhrases(state.scenario);
+                    document.getElementById('phraseScenarioLabel').textContent =
+                        (SCENARIO_NAMES[state.scenario] || state.scenario).replace(/[^\w\s]/gu, '').trim();
+                }
+                toast('เปลี่ยนสถานการณ์เป็น ' + (SCENARIO_NAMES[state.scenario] || state.scenario), 'info');
+            } catch (e) {
+                toast('เกิดข้อผิดพลาดในการเปลี่ยนสถานการณ์', 'error');
+            }
+        }
+
+        // ─────────────────────────────────────────────────
+        // TTS TOGGLE
+        // ─────────────────────────────────────────────────
+        function toggleTts() {
+            state.ttsEnabled = document.getElementById('ttsToggle').checked;
+        }
+
+        // ─────────────────────────────────────────────────
+        // MESSAGE SENDING (SSE)
+        // ─────────────────────────────────────────────────
+        function getTabEls(tab) {
+            return {
+                window: document.getElementById(tab + 'Window'),
+                empty: document.getElementById(tab + 'Empty'),
+                input: document.getElementById(tab + 'Input'),
+                sendBtn: document.getElementById(tab + 'SendBtn'),
+            };
+        }
+
+        function handleKey(e, tab) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(tab);
+            }
+        }
+
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+        }
+
+        async function sendMessage(tab) {
+            if (state.sending[tab]) return;
+            const els = getTabEls(tab);
+            const text = els.input.value.trim();
+            if (!text) return;
+            if (state.history[tab].length >= MAX_HISTORY) {
+                toast('ถึงขีดจำกัด กรุณาล้างการสนทนาก่อน', 'error');
+                return;
+            }
+
+            state.sending[tab] = true;
+            els.input.value = '';
+            els.input.style.height = 'auto';
+            els.sendBtn.disabled = true;
+
+            // Hide empty state
+            if (els.empty) els.empty.style.display = 'none';
+
+            // Add user bubble
+            const idx = state.history[tab].length;
+            state.history[tab].push({ user: text, assistant: '' });
+            appendUserBubble(els.window, text);
+
+            // Add assistant bubble placeholder
+            const aId = `msg-a-${tab}-${idx}`;
+            appendAssistantBubble(els.window, '', aId, true);
+            scrollWindow(els.window);
+
+            let fullText = '';
+
+            try {
+                const resp = await fetch(TAB_ENDPOINT[tab], {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: state.sessionId, message: text }),
+                });
+
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({ detail: resp.statusText }));
+                    throw new Error(err.detail || resp.statusText);
+                }
+
+                const reader = resp.body.getReader();
+                const decoder = new TextDecoder();
+                const bubble = document.getElementById(aId);
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const lines = decoder.decode(value, { stream: true }).split('\n');
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        try {
+                            const parsed = JSON.parse(line.slice(6));
+                            if (parsed.chunk) {
+                                fullText += parsed.chunk;
+                                if (bubble) bubble.innerHTML = formatResponse(fullText, true);
+                                scrollWindow(els.window);
+                            }
+                            if (parsed.done) {
+                                fullText = parsed.full_response || fullText;
+                                state.history[tab][idx].assistant = fullText;
+                                if (bubble) bubble.innerHTML = formatResponse(fullText, false);
+                                scrollWindow(els.window);
+
+                                // Generate TTS if enabled (chat tab only)
+                                if (tab === 'chat' && state.ttsEnabled) {
+                                    generateTts(fullText, aId);
+                                }
+                            }
+                        } catch (_) { }
+                    }
+                }
+            } catch (err) {
+                const bubble = document.getElementById(aId);
+                if (bubble) bubble.innerHTML = `<span style="color:var(--rust)">⚠️ ${err.message}</span>`;
+                toast('⚠️ ' + err.message, 'error');
+            } finally {
+                state.sending[tab] = false;
+                els.sendBtn.disabled = false;
+                updateCounter(tab);
+                // Remove typing indicator if still there
+                const ti = document.getElementById(aId + '-typing');
+                if (ti) ti.remove();
+            }
+        }
+
+        // ─────────────────────────────────────────────────
+        // BUBBLE RENDERERS
+        // ─────────────────────────────────────────────────
+        function appendUserBubble(win, text) {
+            const div = document.createElement('div');
+            div.className = 'msg msg-user';
+            div.innerHTML = `<div class="bubble bubble-user">${escHtml(text)}</div>`;
+            win.appendChild(div);
+        }
+
+        function appendAssistantBubble(win, content, id, showTyping) {
+            const div = document.createElement('div');
+            div.className = 'msg msg-assistant';
+            div.innerHTML = `
+                <div class="msg-avatar">${state.coachAvatar}</div>
+                <div class="bubble bubble-assistant" id="${id}">
+                ${showTyping
+                                ? `<div class="typing-indicator" id="${id}-typing"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`
+                                : formatResponse(content, false)
+                            }
+                </div>
+            `;
+            win.appendChild(div);
+        }
+
+        /**
+         * Format LLM response:
+         * English section / --- / Thai section
+         * Detects "แนะนำประโยคถัดไป:" and renders as phrase list
+         */
+        function formatResponse(raw, streaming) {
+            const parts = raw.split('---');
+            if (parts.length < 2) {
+                // No separator yet (streaming) — render with markdown
+                const _partialHtml = renderMarkdown(raw);
+                return streaming
+                    ? `<span style="font-family:var(--font-ui);color:var(--english-text)">${_partialHtml}<span class="typing-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-left:3px;animation:typingDot 1s infinite"></span></span>`
+                    : `<span style="font-family:var(--font-ui);color:var(--english-text)">${_partialHtml}</span>`;
+            }
+
+            const en = parts[0].trim();
+            const rest = parts.slice(1).join('---').trim();
+
+            // Split off "แนะนำประโยคถัดไป:" section from Thai
+            const nextIdx = rest.indexOf('แนะนำประโยคถัดไป:');
+            const thaiRaw = nextIdx !== -1 ? rest.slice(0, nextIdx).trim() : rest;
+            const nextRaw = nextIdx !== -1 ? rest.slice(nextIdx) : '';
+
+            // English: first line vs (pronunciation tip)
+            const enLines = en.split('\n');
+            let mainEn = '', pronTip = '';
+            for (const line of enLines) {
+                if (line.trim().startsWith('(') && line.trim().endsWith(')')) {
+                    pronTip += line.trim() + ' ';
+                } else if (line.trim()) {
+                    mainEn += (mainEn ? '\n' : '') + line;
+                }
+            }
+
+            let html = '';
+            if (mainEn) html += `<div class="resp-english">${renderMarkdown(mainEn)}</div>`;
+            if (pronTip.trim()) html += `<div class="resp-pron">${escHtml(pronTip.trim())}</div>`;
+
+            if (thaiRaw) {
+                html += `<hr class="resp-divider" /><div class="resp-thai">${renderMarkdown(thaiRaw)}</div>`;
+            }
+
+            // Next phrases
+            if (nextRaw) {
+                const items = nextRaw.replace('แนะนำประโยคถัดไป:', '').trim().split('\n').filter(l => l.trim());
+                if (items.length) {
+                    html += `<div class="resp-next-label">แนะนำประโยคถัดไป</div>`;
+                    for (const item of items) {
+                        const m = item.match(/^\d+\.\s*(.+?)\s*[→–-]\s*(.+)$/u);
+                        if (m) {
+                            html += `<div class="resp-next-item"><span class="resp-next-en">${escHtml(m[1])}</span><span class="resp-next-sep">→</span><span class="resp-next-th">${escHtml(m[2])}</span></div>`;
+                        } else {
+                            html += `<div class="resp-next-item"><span class="resp-next-th">${escHtml(item.replace(/^\d+\.\s*/, ''))}</span></div>`;
+                        }
+                    }
+                }
+            }
+
+            return html || `<span class="resp-thai">${renderMarkdown(raw)}</span>`;
+        }
+
+        function scrollWindow(win) {
+            win.scrollTop = win.scrollHeight;
+        }
+
+        function escHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/\n/g, '<br>');
+        }
+
+        // ─────────────────────────────────────────────────
+        // TTS
+        // ─────────────────────────────────────────────────
+        async function generateTts(text, bubbleId) {
+            try {
+                const res = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: state.sessionId, text }),
+                });
+                if (!res.ok) return;
+
+                const blob = await res.blob();
+                const objectUrl = URL.createObjectURL(blob);
+
+                const bubble = document.getElementById(bubbleId);
+                if (!bubble) return;
+
+                // Append audio player to the bubble's parent msg
+                const msgDiv = bubble.closest('.msg');
+                if (!msgDiv) return;
+
+                const audioId = 'audio-' + bubbleId;
+                const playerDiv = document.createElement('div');
+                playerDiv.className = 'msg-audio';
+                playerDiv.innerHTML = `
+                <div class="audio-player">
+                    <button class="audio-play-btn" onclick="playAudio('${audioId}', this)" title="ฟังออกเสียง">▶</button>
+                    <span class="audio-label">🔊 ฟังออกเสียง</span>
+                    <a class="audio-download-btn" href="${objectUrl}" download="speech.mp3" title="ดาวน์โหลดไฟล์เสียง">⬇</a>
+                    <audio id="${audioId}" src="${objectUrl}"></audio>
+                </div>
+                `;
+                msgDiv.appendChild(playerDiv);
+
+                // Auto-play
+                const audioEl = document.getElementById(audioId);
+                if (audioEl) {
+                    audioEl.addEventListener('error', () => URL.revokeObjectURL(objectUrl), { once: true });
+                    audioEl.play().catch(() => { });
+                }
+            } catch (_) { }
+        }
+
+        function playAudio(audioId, btn) {
+            const audio = document.getElementById(audioId);
+            if (!audio) return;
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = '⏸';
+                audio.onended = () => { btn.textContent = '▶'; };
+            } else {
+                audio.pause();
+                btn.textContent = '▶';
+            }
+        }
+
+        // ─────────────────────────────────────────────────
+        // RETRY / UNDO / CLEAR
+        // ─────────────────────────────────────────────────
+        function retryLast(tab) {
+            const hist = state.history[tab];
+            if (!hist.length) return;
+            const last = hist[hist.length - 1];
+            // Pop from history and re-send
+            hist.pop();
+            const win = document.getElementById(tab + 'Window');
+            // Remove last two msg divs (user + assistant)
+            const msgs = win.querySelectorAll('.msg');
+            if (msgs.length >= 2) { msgs[msgs.length - 1].remove(); msgs[msgs.length - 2].remove(); }
+            else if (msgs.length === 1) msgs[msgs.length - 1].remove();
+            // Re-fill input and send
+            const inp = document.getElementById(tab + 'Input');
+            inp.value = last.user;
+            sendMessage(tab);
+        }
+
+        function undoLast(tab) {
+            const hist = state.history[tab];
+            if (!hist.length) return;
+            hist.pop();
+            const win = document.getElementById(tab + 'Window');
+            const msgs = win.querySelectorAll('.msg');
+            if (msgs.length >= 2) { msgs[msgs.length - 1].remove(); msgs[msgs.length - 2].remove(); }
+            else if (msgs.length === 1) msgs[msgs.length - 1].remove();
+            if (!win.querySelectorAll('.msg').length) {
+                document.getElementById(tab + 'Empty').style.display = '';
+            }
+            updateCounter(tab);
+        }
+
+        async function clearChat(tab) {
+            state.history[tab] = [];
+            const win = document.getElementById(tab + 'Window');
+            const msgs = win.querySelectorAll('.msg');
+            msgs.forEach(m => m.remove());
+            document.getElementById(tab + 'Empty').style.display = '';
+            updateCounter(tab);
+
+            try {
+                await fetch(`/api/clear/${tab}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: state.sessionId }),
+                });
+            } catch (_) { }
+            toast('ล้างการสนทนาแล้ว', 'info');
+        }
+
+        // ─────────────────────────────────────────────────
+        // MESSAGE COUNTER
+        // ─────────────────────────────────────────────────
+        function updateCounter(tab) {
+            // Update shared counter (chat tab)
+            const remaining = MAX_HISTORY - state.history[tab].length;
+            const el = document.getElementById('msgCounter');
+            if (el) {
+                el.textContent = remaining + ' ข้อความ';
+                el.classList.toggle('low', remaining <= 5);
+            }
+        }
+
+        // ─────────────────────────────────────────────────
+        // SAVE CONVERSATION
+        // ─────────────────────────────────────────────────
+        async function saveConversation(tab) {
+            const hist = state.history[tab];
+            if (!hist.length) { toast('ยังไม่มีการสนทนา', 'info'); return; }
+            try {
+                const res = await fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: state.sessionId, history: hist, mode: tab }),
+                });
+                const data = await res.json();
+                // Download as file
+                const blob = new Blob([data.content], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = data.filename; a.click();
+                URL.revokeObjectURL(url);
+                toast('💾 บันทึกสำเร็จ: ' + data.filename, 'success');
+            } catch (e) {
+                toast('เกิดข้อผิดพลาดในการบันทึก', 'error');
+            }
+        }
+
+        // ─────────────────────────────────────────────────
+        // QUICK PHRASES
+        // ─────────────────────────────────────────────────
+        async function loadPhrases(scenario) {
+            const grid = document.getElementById('phraseGrid');
+            grid.innerHTML = '<span style="color:var(--text-muted);font-size:12px">กำลังโหลด...</span>';
+            try {
+                const res = await fetch(`/api/phrases/${scenario}`);
+                const data = await res.json();
+                grid.innerHTML = (data.phrases || []).map(p => `
+                <div class="phrase-card" onclick="usePhrase(${JSON.stringify(p.english).replace(/"/g, '&quot;')})">
+                    <div class="phrase-card-en">${escHtml(p.english)}</div>
+                    <div class="phrase-card-th">${escHtml(p.thai)}</div>
+                    <span class="phrase-card-ctx">${escHtml(p.context)}</span>
+                </div>
+                `).join('');
+                document.getElementById('phraseScenarioLabel').textContent =
+                    (SCENARIO_NAMES[scenario] || scenario).replace(/[^\w\s]/gu, '').trim();
+            } catch (e) {
+                grid.innerHTML = '<span style="color:var(--rust);font-size:12px">ไม่สามารถโหลด Quick Phrases ได้</span>';
+            }
+        }
+
+        function usePhrase(english) {
+            const inp = document.getElementById('chatInput');
+            inp.value = english;
+            autoResize(inp);
+            inp.focus();
+            // switch to chat tab
+            switchTab('chat');
+        }
+
+        // ─────────────────────────────────────────────────
+        // PRONUNCIATION EXAMPLES
+        // ─────────────────────────────────────────────────
+        function fillPron(text) {
+            const inp = document.getElementById('pronunciationInput');
+            inp.value = text;
+            autoResize(inp);
+            inp.focus();
+        }
+
+        // ─────────────────────────────────────────────────
+        // SLANG GUIDE
+        // ─────────────────────────────────────────────────
+        async function loadSlangData() {
+            try {
+                const res = await fetch('/api/slang');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                state.slangData = await res.json();
+                renderSlang();
+            } catch (e) {
+                console.error('loadSlangData error:', e);
+                document.getElementById('slangGrid').innerHTML =
+                    '<div style="color:var(--rust);padding:20px">ไม่สามารถโหลดข้อมูล Slang ได้</div>';
+            }
+        }
+
+        function setCat(btn, cat) {
+            state.slangCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+            renderSlang();
+        }
+
+        function filterSlang() {
+            renderSlang();
+        }
+
+        function renderSlang() {
+            if (!state.slangData) return;
+            const grid = document.getElementById('slangGrid');
+            const query = (document.getElementById('slangSearch').value || '').toLowerCase();
+            const catKeys = state.slangCat === 'all'
+                ? Object.keys(state.slangData)
+                : [state.slangCat];
+
+            const cards = [];
+            for (const cat of catKeys) {
+                const items = state.slangData[cat] || [];
+                for (const item of items) {
+                    if (query && !(
+                        item.term.toLowerCase().includes(query) ||
+                        item.meaning.toLowerCase().includes(query) ||
+                        item.example.toLowerCase().includes(query)
+                    )) continue;
+                    cards.push({ ...item, cat });
+                }
+            }
+
+            if (!cards.length) {
+                grid.innerHTML = '<div class="slang-no-result">ไม่พบคำที่ค้นหา ลองคำอื่น</div>';
+                return;
+            }
+
+            const tagClass = { general: 'tag-general', academic: 'tag-academic', polite: 'tag-polite', emergency: 'tag-emergency' };
+            const catLabel = { general: 'ทั่วไป', academic: 'วิชาการ', polite: 'สุภาพ', emergency: 'ฉุกเฉิน' };
+
+            grid.innerHTML = cards.map(c => `
+                <div class="slang-card">
+                <div class="slang-term">${escHtml(c.term)}</div>
+                <div class="slang-meaning">${escHtml(c.meaning)}</div>
+                <div class="slang-example">${escHtml(c.example)}</div>
+                <span class="slang-cat-tag ${tagClass[c.cat] || ''}">${catLabel[c.cat] || c.cat}</span>
+                </div>
+            `).join('');
+        }
+
+        // ─────────────────────────────────────────────────
+        // TOAST
+        // ─────────────────────────────────────────────────
+        function toast(msg, type = 'info', duration = 3000) {
+            const c = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.textContent = msg;
+            c.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.3s';
+                setTimeout(() => el.remove(), 300);
+            }, duration);
+        }
+
+        // ─────────────────────────────────────────────────
+        // CLICK OUTSIDE MODAL TO CLOSE (only if initialized)
+        // ─────────────────────────────────────────────────
+        document.getElementById('setupModal').addEventListener('click', function (e) {
+            if (e.target === this && state.initialized) closeSetup();
+        });
+
+        // ─────────────────────────────────────────────────
+        // PREVENT ZOOM ON INPUT FOCUS (iOS)
+        // ─────────────────────────────────────────────────
+        document.querySelectorAll('input, textarea, select').forEach(el => {
+            el.style.fontSize = '16px';
+        });
+    </script>
+</body>
+</html>
